@@ -1,0 +1,23 @@
+```gitignore
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+.env
+venv/
+env/
+
+# Bot data
+user_prompts.json
+bot_activity.log
+*.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
