@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: shadow-prompt-bot
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        value: YOUR_TOKEN_HERE  # غيّره بتوكنك الحقيقي
+      - key: PYTHON_VERSION
+        value: 3.10.14
