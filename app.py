@@ -173,7 +173,7 @@ class Database:
             return {"total_users": len(self.users), "total_prompts": self.stats["total_prompts"]}
         
         total_users = self.db.stats.find_one({"key": "total_users"})
-        total_prompts = self.db.stats.find_one({"key":total_prompts"})
+        total_prompts = self.db.stats.find_one({"key": "total_prompts"})
         return {
             "total_users": total_users["value"] if total_users else 0,
             "total_prompts": total_prompts["value"] if total_prompts else 0
