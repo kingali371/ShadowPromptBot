@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - Shadow Prompt Bot</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f6fa;
+        }
+        .sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 260px;
+            height: 100%;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: #34495e;
+        }
+        .main-content {
+            margin-right: 260px;
+            padding: 20px;
+        }
+        .header {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .stat-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        canvas {
+            max-height: 300px;
+        }
+        .logout {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>🔓 Shadow Prompt Bot</h2>
+        <a href="/dashboard" class="active">📊 الرئيسية</a>
+        <a href="/users">👥 المستخدمين</a>
+        <a href="/prompts">📝 البرومبتات</a>
+        <a href="/stats">📈 الإحصائيات</a>
+        <a href="/settings">⚙️ الإعدادات</a>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h1>لوحة التحكم</h1>
+            <button class="logout" onclick="location.href='/logout'">🚪 خروج</button>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>👥 إجمالي المستخدمين</h3>
+                <div class="value" id="totalUsers">{{ stats.total_users }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>📝 إجمالي البرومبتات</h3>
+                <div class="value" id="totalPrompts">{{ stats.total_prompts }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>⚡ نشطاء اليوم</h3>
+                <div class="value" id="activeToday">{{ stats.active_today }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>📅 نشطاء الأسبوع</h3>
+                <div class="value" id="activeWeek">{{ stats.active_week }}</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h3>توزيع اللغات</h3>
+            <canvas id="langChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h3>توزيع أنواع البرومبتات</h3>
+            <canvas id="promptTypeChart"></canvas>
+        </div>
+    </div>
+    
+    <script>
+        const langData = {{ stats.languages | tojson }};
+        const promptTypes = {{ stats.prompts_by_type | tojson }};
+        
+        new Chart(document.getElementById('langChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(langData),
+                datasets: [{
+                    data: Object.values(langData),
+                    backgroundColor: ['#3498db', '#2ecc71', '#e74c3c']
+                }]
+            }
+        });
+        
+        new Chart(document.getElementById('promptTypeChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(promptTypes),
+                datasets: [{
+                    label: 'عدد الاستخدامات',
+                    data: Object.values(promptTypes),
+                    backgroundColor: '#3498db'
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
